@@ -1,0 +1,147 @@
+🔹 1. auto
+
+Default storage class for local variables (inside a function).
+
+Lifetime: Exists only while the function is running.
+
+Scope: Local to the function/block.
+
+Default value: Garbage (not initialized).
+
+#include <stdio.h>
+int main() {
+    auto int x = 10;  // "auto" is optional
+    printf("%d\n", x);
+    return 0;
+}
+
+🔹 2. register
+
+Suggests compiler to store variable in CPU register (for faster access).
+
+Lifetime: Till function ends.
+
+Scope: Local to block.
+
+Default value: Garbage.
+
+⚠️ You cannot get the address of a register variable using &.
+
+#include <stdio.h>
+int main() {
+    register int count = 0;
+    printf("%d\n", count);
+    return 0;
+}
+
+🔹 3. static
+
+Keeps the variable alive throughout the program, even if declared inside a function.
+
+Lifetime: Till program ends.
+
+Scope:
+
+Local static: only inside the function, but value is retained between calls.
+
+Global static: visible only inside the same file.
+
+Default value: 0 (for uninitialized static variables).
+
+#include <stdio.h>
+void demo() {
+    static int count = 0; // value preserved
+    count++;
+    printf("%d\n", count);
+}
+int main() {
+    demo(); // 1
+    demo(); // 2
+    demo(); // 3
+    return 0;
+}
+
+🔹 4. extern
+
+Used for global variables.
+
+Tells the compiler: "This variable is declared somewhere else (maybe another file)."
+
+Lifetime: Till program ends.
+
+Scope: Global.
+
+Default value: 0.
+
+👉 Useful for multi-file programs.
+
+file1.c
+
+#include <stdio.h>
+int num = 10;  // global variable
+
+
+file2.c
+
+#include <stdio.h>
+extern int num;  // declared in another file
+int main() {
+    printf("%d\n", num);
+    return 0;
+}
+
+
+✅ Summary Table
+
+Storage Class	Lifetime	Scope	Default Value	Keyword
+auto	Function/block	Local	Garbage	auto
+register	Function/block	Local	Garbage	register
+static	Entire program	Local/Global	0	static
+extern	Entire program	Global (other file)	0	extern
+
+////////////////////////////////////////////////////////////////////////////////
+🔹 Q: Kyun hum variables ko initialize karte hain jaise int iAns = 0;?
+
+Default value garbage hoti hai
+
+Local variables (auto storage class → stack memory) ka default value kuch bhi ho sakta hai (garbage).
+
+Agar tu initialize nahi karega aur directly use karega, toh unpredictable output aayega.
+
+int x;   // garbage value
+printf("%d", x); // unpredictable
+
+
+Isiliye, safe programming practice hai ki hum pehle initialize karein (0 ya koi bhi starting value).
+
+Code clarity & readability
+
+Jab tu int iAns = 0; likhta hai, toh dusra programmer easily samajhta hai ki iAns ka starting point zero hai.
+
+Agar tu bina initialize kare use karega, toh samajhna mushkil ho jaata hai.
+
+Debugging easy hoti hai
+
+Agar program mein bug hai, aur tu variables ko 0 se start karta hai, toh quickly pata chal jaata hai ki kahan problem hai.
+
+Agar garbage values hoti, toh bug trace karna mushkil ho jaata.
+
+Kuch cases mein logical need hoti hai
+
+Jaise sum nikalna hai, toh starting mein sum = 0 hona chahiye.
+
+Counter chalana hai, toh starting value define karni zaroori hai.
+
+🔹 Ab tere code mein:
+int iAns = 0, jAns = 0;
+
+
+Yeh extra memory waste ya sirf line badhane ke liye nahi hai 🚫.
+Iska purpose hai:
+
+Pehle se variables ko ek known safe state (0) dena.
+
+Agar neeche koi logic galti se variable use kar le before assignment, toh kam se kam garbage nahi, 0 use hoga.
+
+✅ Hindenglish short mein:
+Variable ko =0 se initialize karna ek safety belt jaisa hai. Agar gaadi (code) galat chale bhi gayi, toh crash (garbage value) se bach jaayega 😅.
